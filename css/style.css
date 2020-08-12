@@ -1,0 +1,194 @@
+*, :after, :before {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    font-family: Montserrat, serif, roboto; 
+    box-sizing: border-box;
+    overflow: hidden;
+}
+main{
+    position: relative;
+    min-height: 100vh; 
+}
+
+/* vvvv   ASIDE    vvvv */
+aside{
+    background: rgb(235, 189, 189);
+    transition: .2s;
+    position: fixed;
+    width: 250px;
+    min-height: 400px;
+    transform: translateY(-50%);
+    top: 50%;
+    padding: 20px 10px 20px 0px;
+    border: 1px solid black;
+    border-radius: 2px 10px 10px 2px;
+    box-shadow: -2px 0px 10px 1px black;
+    margin-left: -1px;
+    transition: all .5s ease;
+}  
+
+.aside-hide {
+    margin-left: -240px;
+}
+.aside-hide:hover {
+    margin-left: -230px;
+}
+aside fieldset {
+    border: 1px dashed rgba(21, 19, 32, 0.8);
+    border-radius: .8rem;
+    margin: 20px;
+    padding: 10px 10px 10px 10px;
+}
+    aside fieldset:before{
+        font-size: 1.2rem;
+        z-index: 3;
+        background-color: rgb(235, 189, 189) ;
+        padding: 2px 10px;
+    }
+        .fiel-add:before{
+            content: 'Добавить';
+            position: relative;
+            top: -20px;
+            left: 40px;
+        }
+        .fiel-search:before{
+            content: 'Поиск';
+            position: relative;
+            top: -20px;
+            left: 57px;
+        }
+aside input, aside textarea, #i-izdelie {
+    border-radius: .4rem;
+}
+
+aside .divbtn {
+    cursor: pointer;
+    background-color: rgb(185, 185, 185);
+    border: 2px solid rgba(188, 201, 201,.5);
+    box-shadow: -2px 0px 10px 1px black;
+    font-weight: bolder;
+    font-size: 1.2rem;
+} 
+
+.addtask {
+    width: 150px;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+}
+    .addtask .add-button {
+        width: 80px;
+        text-align: center;
+        border-radius: 5px;
+        background-color: rgb(185, 185, 185);
+    }
+
+.aside .search{
+    display: flex;
+    flex-direction: column;
+}
+    aside textarea {
+        resize: none;
+        height: 3rem;
+    }
+    aside input[type=date] {
+
+    }
+    .search-izdelie {
+        display: flex;
+        flex-direction: column;
+    }
+        .search-izdelie div{
+            display: flex;
+            justify-content: space-around; 
+        }
+            .search #i-izdelie {
+                width: 85%;
+            }
+        .search .izd-add {
+            padding: 2px 4px 1px;
+            border-radius: 5px;
+            justify-content: center;
+            align-items: center;
+        }
+
+.aside-arrow{
+    position: absolute;
+    right: -5px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 30px 3px;
+    border-radius: 5px 10px 10px 5px;
+}
+    
+
+/* ^^^^   ASIDE    ^^^^ */
+
+header {
+    grid-column: 1/-1;
+    color: rgb(247, 213, 194);
+    background: rgb(13, 61, 45);
+    padding: 5px 5px 5px 15px;
+}
+
+.stick-area {
+    background: rgb(241, 241, 185);
+    z-index : -1;
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+/*  vvvv MODAL NEW TASK   vvvv   */
+
+.modal-newtask-container {
+    position: absolute;
+    top : 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(0,0,0,.5);
+    opacity: 0;
+    transition: all .2s ease-in;
+}
+    .modal-newtask {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50% , -50%);
+        width: 300px;
+        border: 2px solid black;
+        border-radius: 0.8rem;
+        background-color: rgb(179, 212, 245,0.8);
+        padding: 20px;
+        text-align: center;
+    }
+    .modal-newtask fieldset {
+        margin-top: 10px;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        border-radius: .8rem;
+        border: 2px dashed rgba(68, 68, 68, .5);
+    }
+        .modal-newtask input , textarea{
+            margin-bottom: 10px;
+            width: 100%;
+        }
+        .modal-newtask textarea{
+            resize: none;
+            height: 5em;
+        }
+
+
+/*  ^^^^ MODAL NEW TASK   ^^^^   */
+
+.non-opacity {
+    opacity: 1;
+}

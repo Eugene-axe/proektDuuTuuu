@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Список дел</title>
+</head>
+<body>
+    <header class='header'>
+        <h1>Здрасьте, User. Список Ваших дел ....</h1>
+    </header>
+    <main>
+        <aside class='aside aside-hide'>
+            <div class='aside-arrow divbtn'>></div>
+            <fieldset class='fiel-add'>
+                <div class="addtask">
+                    <div class='add-button divbtn'>Задачу</div>
+                </div>
+            </fieldset>
+            <fieldset class='fiel-search'>
+                <div class="search">
+                    <label for="i-autor">Кто выдал: </label><input type="text"  id='i-autor'>
+                    <label for="i-worker">Кому выдал: </label><input type="text"    id='i-worker'>
+                    <!-- <label for="i-izdelie">Изделие: </label><input type="text"  id='i-izdelie'> -->
+                    <div class="search-izdelie">
+                        <label for="i-izdelie">Изделие: </label>
+                        <div>
+                            <select id='i-izdelie'>
+                                <option value="1">Изделие 1</option>
+                                <option value="2">Изделие 2</option>
+                                <option value="3">Изделие 3</option>
+                            </select>
+                            <div class="izd-add divbtn">+</div>
+                        </div>
+                    </div>
+                    <label for="i-data">Когда выдал:</label><input type="date" id='i-data'>
+                    <label for="i-dedline">Дедлайн: </label><input type="date"  id='i-dedline'>
+                    <label for="i-description">Часть описания: </label><textarea    id='i-description' placeholder="Слова из описания"></textarea>
+                </div>
+            </fieldset>
+        </aside>
+        <div class='stick-area'></div>
+    </main>
+    
+    <script src='script/class/Task.js'></script>
+    <script src='script/class/User.js'></script>
+    <script src='script/main.js'></script>
+
+</body>
+</html>
