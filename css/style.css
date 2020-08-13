@@ -11,7 +11,23 @@ body {
 main{
     position: relative;
     min-height: 100vh; 
+    z-index: 1;
 }
+fieldset {
+    border-radius: .8rem;
+    border: 2px dashed rgba(68, 68, 68, .5);
+    margin: 15px;
+    padding: 10px;
+    text-align: center;
+}
+.divbtn {
+    cursor: pointer;
+    background-color: rgb(185, 185, 185);
+    border: 2px solid rgba(188, 201, 201,.5);
+    box-shadow: -2px 0px 10px 1px black;
+    font-weight: bolder;
+    font-size: 1.2rem;
+} 
 
 /* vvvv   ASIDE    vvvv */
 aside{
@@ -22,12 +38,13 @@ aside{
     min-height: 400px;
     transform: translateY(-50%);
     top: 50%;
-    padding: 20px 10px 20px 0px;
-    border: 1px solid black;
+    padding: 5px 10px 0px 0px;
+    border: 2px solid black;
     border-radius: 2px 10px 10px 2px;
     box-shadow: -2px 0px 10px 1px black;
     margin-left: -1px;
     transition: all .5s ease;
+    z-index: 3;
 }  
 
 .aside-hide {
@@ -37,8 +54,10 @@ aside{
     margin-left: -230px;
 }
 aside fieldset {
+    /*
     border: 1px dashed rgba(21, 19, 32, 0.8);
     border-radius: .8rem;
+    */
     margin: 20px;
     padding: 10px 10px 10px 10px;
 }
@@ -61,17 +80,8 @@ aside fieldset {
             left: 57px;
         }
 aside input, aside textarea, #i-izdelie {
-    border-radius: .4rem;
+    border-radius: .2rem;
 }
-
-aside .divbtn {
-    cursor: pointer;
-    background-color: rgb(185, 185, 185);
-    border: 2px solid rgba(188, 201, 201,.5);
-    box-shadow: -2px 0px 10px 1px black;
-    font-weight: bolder;
-    font-size: 1.2rem;
-} 
 
 .addtask {
     width: 150px;
@@ -93,10 +103,10 @@ aside .divbtn {
     aside textarea {
         resize: none;
         height: 3rem;
-    }
+    }/*
     aside input[type=date] {
 
-    }
+    }*/
     .search-izdelie {
         display: flex;
         flex-direction: column;
@@ -134,15 +144,6 @@ header {
     padding: 5px 5px 5px 15px;
 }
 
-.stick-area {
-    background: rgb(241, 241, 185);
-    z-index : -1;
-    position: absolute;
-    top:0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-}
 
 /*  vvvv MODAL NEW TASK   vvvv   */
 
@@ -155,6 +156,7 @@ header {
     background-color: rgba(0,0,0,.5);
     opacity: 0;
     transition: all .2s ease-in;
+    z-index: 4;
 }
     .modal-newtask {
         position: fixed;
@@ -164,30 +166,105 @@ header {
         width: 300px;
         border: 2px solid black;
         border-radius: 0.8rem;
-        background-color: rgb(179, 212, 245,0.8);
-        padding: 20px;
+        background-color: rgb(179, 212, 245);
+        padding: 10px;
         text-align: center;
+        box-shadow: -2px 0px 10px 1px black;
+        opacity: 0.8;
     }
     .modal-newtask fieldset {
-        margin-top: 10px;
-        padding: 10px;
         display: flex;
         flex-direction: column;
         justify-content: space-around;
-        border-radius: .8rem;
-        border: 2px dashed rgba(68, 68, 68, .5);
+        align-items: center;
     }
+        .modal-newtask .newtask-hf{
+            font-size: 1.2rem;
+            z-index: 5;
+            background-color: rgb(179, 212, 245) ;
+            padding: 2px 0px;
+        }
+            .field-modalinputs .newtask-hf{
+                position: relative;
+                top: -20px;
+                left: 100px;
+                width: 50%;
+            }
         .modal-newtask input , textarea{
             margin-bottom: 10px;
             width: 100%;
+            border-radius: .2rem;
         }
         .modal-newtask textarea{
             resize: none;
             height: 5em;
         }
-
+    .field-modalbtn>div{
+        display: flex;
+        justify-content: space-around
+    }
+        .field-modalbtn .btn-ok, .field-modalbtn .btn-cancel  {
+            width: 40%;
+            border-radius: 0.3rem;
+        }
 
 /*  ^^^^ MODAL NEW TASK   ^^^^   */
+
+/* vvvv vvvv STICK AREA vvvv vvvv*/
+
+.stick-area {
+    background: rgb(241, 241, 185);
+    z-index : 2;
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+    .task-container{
+        border: 2px dashed  rgba(68, 68, 68, .5);
+        border-radius: 0.8rem;
+        display: inline-block;
+    }
+    .stick{
+        background-color: rgb(202, 248, 196);
+        width: 200px;
+        height: 200px;
+        border: 2px solid black;
+        border-radius: .8rem;
+        padding: 5px;
+        display: grid;
+        grid-template-rows: 1fr 10fr 1fr;
+        margin: 20px;
+    }
+     .stick .stc-row{
+         border-bottom: 2px solid rgba(5, 34, 12, 0.2);
+     }
+     .stick .stc-row:last-child{
+        border-bottom: 0px solid rgba(5, 34, 12, 0.2);
+    }
+        .stick .row1 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+            .stick .row1 .stick-date {
+                font-size: .8em;
+            }
+            .stick .row1 .stick-izd {
+                font-size: 1.2em;
+            }
+        .stick .row3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+/* ^^^^ ^^^^ STICK AREA ^^^^ ^^^^*/
 
 .non-opacity {
     opacity: 1;

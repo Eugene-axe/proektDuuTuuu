@@ -8,9 +8,10 @@ class User {
         this.password = '';
         this.archiveTasks = [];
     }
-    setTask(title) {
+    setTask(komu , izdelie , title , description , dedline) {
         let date = `${new Date().getMinutes()}м. ${new Date().getHours()}ч. ${new Date().getDate()} : ${new Date().getMonth()+1} : ${new Date().getFullYear()} `;
-        let task = new Task( this.name, 'Исполнитель', 'изделие' , false , title , 'Описание', date , 'конец работы');
+        let task = new Task( this.name, komu , izdelie , false , title , description, date , dedline, 'когда закончишь');
+        console.log('Задача сформирована');
         this.saveInArchive(task);
     }
     logIn(){
@@ -27,10 +28,12 @@ class User {
     }
     saveInArchive(task){ //добавляет задачу к архиву
         this.archiveTasks.push(task);
+        console.log('Задача добавлена в архив');
         this.setInLocalStorage();
     }
     setInLocalStorage(){ //сохранит в память массив задач
         localStorage.setItem(this.login , JSON.stringify(this.archiveTasks));
+        console.log('Архив задач пользователя сохранился в LS')
         //localStorage.getItem('ключ') - берем значение по ключу
         //localStorage.removeItem('имя ключа') - удаляем ключ
         //localStroage.clear() - очищает все хранилище

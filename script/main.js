@@ -5,7 +5,36 @@ const app = {
     aside : document.querySelector('aside'),
     main : document.querySelector('main'),
     stickArea : document.querySelector('.stick-area'),
-    modal: null,
+    handler: {
+        newtaskOk(){ // кнопка ОК в модалке Новой задачи
+            console.log('ok');
+            //setTask(komu , izdelie , title , description , dedline)
+            const komu = document.getElementById('mod-worker').value;
+            const izdelie = document.getElementById('mod-izdelie').value;
+            const title = document.getElementById('mod-title').value;
+            const description = document.getElementById('mod-description').value;
+            const dedline = document.getElementById('mod-dedline').value;
+            app.user.setTask(komu , izdelie , title , description , dedline);
+            document.querySelector('.modal-newtask .btn-ok').removeEventListener('click' , app.handler.newtaskOk);
+            document.querySelector('.modal-newtask .btn-cancel').removeEventListener('click', app.handler.newtaskCancel);
+            app.handler.closeModal(app.modal.newtask);
+            app.createTaskGrid(app.user)
+        },
+        newtaskCancel(modal){  //кнопка Cancel в модалке Новой задачи
+            console.log('cancel');
+            document.querySelector('.modal-newtask .btn-ok').removeEventListener('click' , app.handler.newtaskOk);
+            document.querySelector('.modal-newtask .btn-cancel').removeEventListener('click', app.handler.newtaskCancel);
+            app.handler.closeModal(app.modal.newtask);
+        },
+        closeModal(modal){ //делает модалку невидимой, затем удаляет
+            modal.classList.remove('non-opacity');
+            setTimeout( ()=> modal.remove() , 300);
+        },
+
+    },
+    modal: {
+        newtask: null,
+    },
     user: null,
     taskStick: 'stick',
 
@@ -22,36 +51,65 @@ const app = {
             arrow.textContent = arrow.textContent == '>' ? '<' : '>';
             this.aside.classList.toggle('aside-hide');
         });
-        newTaskButton.addEventListener('click' , () => {
+        newTaskButton.addEventListener('click' , () => { //событие кнопки добавления новой задачи
             this.getCreateModalAddNewTask();
-        }); //пока создаем простенькую задачу и кладем ее в архив задач к Пользователю
-    },
+        });
+    }, 
     createTaskGrid(user){ //создаем сетку задач
+        document.querySelector('.stick-area').innerHTML = '';
         let arrayTask = user.getOutLocalStroage(); //вынимаем из памяти задачи конкретного Пользователя
-        this.createTaskStick();
+        arrayTask.forEach( task => {
+            document.querySelector('.stick-area').append( this.createTaskStick(task));
+        });
     },
-    createTaskStick(){ //создаем конкретный стикер с задачей
-        const stick = document.querySelector('div');
-        stick.classList.add('stick');
+    createTaskStick(task){ //создаем конкретный 1 стикер с задачей
+        const stick = document.createElement('div');
+        stick.classList.add('task-container');
+        stick.insertAdjacentHTML('afterbegin' , `
+            <div class="stick">
+                <div class="stc-row row1">
+                    <div class="stick-date">
+                        <span class="stick-date-begin">${task.dateStart}</span>
+                        <span class="stick-dedline">${task.dateEnd}</span>
+                    </div>
+                    <div class="stick-izd">${task.izdelie}</div>
+                </div>
+                <div class="stc-row row2">${task.description}</div>
+                <div class="stc-row row3">
+                    <span class='stick-autor'>${task.autor}</span>
+                    <span class='stick-worker'>${task.worker}</span>
+                </div>
+            </div>`);
+        this.taskStick = stick;
         return stick;
     },
-    getCreateModalAddNewTask(){
+    getCreateModalAddNewTask(){ //выводит модальное окно создания нового Стикера задачи
         const modal = document.createElement('div');
         modal.classList.add('modal-newtask-container');
         modal.insertAdjacentHTML('afterbegin' , `
-            <div class='modal-newtask'>
-                <h3>Новая задача</h3>
-                <form action="">
-                    <fieldset>
-                        <label for="mod-worker">Кому: </label><input type="text" id="mod-worker" placeholder='Рабу апз-шному'>
-                        <label for="mod-izdelie">Изделие : </label><input type="text" id="mod-izdelie" placeholder='на ЖМП.00.55'>
-                        <label for="mod-dedline">До какого числа: </label><input type="date" id="mod-dedline" placeholder='до вчера'>
-                        <label for="mod-description">Описание задания: </label><textarea id="mod-description" placeholder='ПИ ЗдАл?'></textarea>
-                    </fieldset>
-                </form>
-            </div>`);
+        <div class='modal-newtask'>
+            <form action="">
+                <fieldset class='field-modalinputs'>
+                    <div class="newtask-hf">Новая задача</div>
+                    <label for="mod-title">Название: </label><input type="text" id="mod-title" placeholder='Важное дело, очень' value="Тема">
+                    <label for="mod-worker">Кому: </label><input type="text" id="mod-worker" placeholder='Рабу апз-шному' value="Рабу">
+                    <label for="mod-izdelie">Изделие : </label><input type="text" id="mod-izdelie" placeholder='на ЖМП.00.55' value="888">
+                    <label for="mod-dedline">До какого числа: </label><input type="date" id="mod-dedline" placeholder='до вчера'>
+                    <label for="mod-description">Описание задания: </label><textarea id="mod-description" placeholder='ПИ ЗдАл?' value="">Скажи мне , что бы я сказал ему, чтобы тот пошел не туда и заставил всех там суки работать пожалуйста</textarea>
+                </fieldset>
+                <fieldset class='field-modalbtn'>
+                    <div>
+                        <div class="btn-ok divbtn">Запомним</div>
+                        <div class="btn-cancel divbtn">Забьем</div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>`);
         document.querySelector('body').append(modal);
+        document.querySelector('.modal-newtask .btn-ok').addEventListener('click' , this.handler.newtaskOk );
+        document.querySelector('.modal-newtask .btn-cancel').addEventListener('click' , this.handler.newtaskCancel);
         setTimeout( () => modal.classList.add('non-opacity') , 100);
+        this.modal.newtask = modal;
         return modal;
     },
     run(){ //запуск приложения
@@ -63,46 +121,4 @@ const app = {
 }
 
 app.run();
-    /*
-    createHeader(){
-        const header = document.createElement('header');
-            header.classList.add('header');
-            header.insertAdjacentHTML('afterbegin' , `
-            <header class='header'>
-                <h1>Здрасьте, User. Список Ваших дел ....</h1>
-            </header>`);
-        return header;
-    },//end createHeader
-    createSideBar(){ //может и не пригодится но на всякий
-        const sideBar = document.createElement('aside');
-            sideBar.classList.add('aside');
-            sideBar.insertAdjacentHTML('afterbegin', `<div class='aside-arrow divbtn'>></div>
-            <fieldset class='fiel-add'>
-                <div class="addtask">
-                    <div class='add-button divbtn'>Задачу</div>
-                </div>
-            </fieldset>
-            <fieldset class='fiel-search'>
-                <div class="search">
-                    <label for="i-autor">Кто выдал: </label><input type="text"  id='i-autor'>
-                    <label for="i-worker">Кому выдал: </label><input type="text"    id='i-worker'>
-                    <!-- <label for="i-izdelie">Изделие: </label><input type="text"  id='i-izdelie'> -->
-                    <div class="search-izdelie">
-                        <label for="i-izdelie">Изделие: </label>
-                        <div>
-                            <select id='i-izdelie'>
-                                <option value="1">Изделие 1</option>
-                                <option value="2">Изделие 2</option>
-                                <option value="3">Изделие 3</option>
-                            </select>
-                            <div class="izd-add divbtn">+</div>
-                        </div>
-                    </div>
-                    <label for="i-data">Когда выдал:</label><input type="date" id='i-data'>
-                    <label for="i-dedline">Дедлайн: </label><input type="date"  id='i-dedline'>
-                    <label for="i-description">Часть описания: </label><textarea    id='i-description' placeholder="Слова из описания"></textarea>
-                </div>
-            </fieldset>`);
-        return sideBar;
-    },//end createSideBar*/
-
+  
