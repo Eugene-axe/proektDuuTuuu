@@ -221,7 +221,7 @@ header {
     left: 0;
     right: 0;
 
-    padding: 50px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -231,6 +231,7 @@ header {
         border: 2px dashed  rgba(68, 68, 68, .5);
         border-radius: 0.8rem;
         display: inline-block;
+        margin-bottom: 20px;
     }
     .stick{
         background-color: rgb(202, 248, 196);
@@ -242,6 +243,13 @@ header {
         display: grid;
         grid-template-rows: 1fr 10fr 1fr;
         margin: 20px;
+    }
+    .stick .left-half{
+        display: flex;
+        flex-direction: column;
+    }
+    .stick .right-half{
+        text-align: end;
     }
      .stick .stc-row{
          border-bottom: 2px solid rgba(5, 34, 12, 0.2);

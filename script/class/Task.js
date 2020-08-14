@@ -1,19 +1,21 @@
 'use strict'
 
 class Task{
-    constructor(autor, worker, izdelie, status, title, description, dateStart, dedline, dateEnd ){
-        this.autor = autor;//'Кто выдал';
-        this.worker = worker;//'Кому выдал';
-        this.status = status;//'выполнено или в работе';
+    constructor(izdelie, title){
+        this.status = false;//'выполнено или в работе';
         this.title = title;//'заголовок';
         this.izdelie = izdelie;//'изделие';
-        this.description = description;//'описание задачи';
-        this.dateStart = dateStart;//'Когда выдана';
-        this.dedline = dedline//
-        this.dateEnd = dateEnd;//'Когда закончена';
+        this.arraySubTask = []; //массив подзадач
     }
     changeStatus() {
         this.status = true;
-        this.dateEnd = `${new Date().getHours()}ч. ${new Date().getMinutes()}м. ${new Date().getDate()}:${new Date().getMonth()+1}:${new Date().getFullYear()}`; 
+        this.dateEnd = `${new Date().getHours()}:${new Date().getMinutes()} ${new Date().getDate()}:${new Date().getMonth()+1}:${new Date().getFullYear()}`; 
     }
-}
+    setAutor(user){
+        this.autor = user.name;
+    }
+    setId(){
+        this.id = Math.floor(Math.random()*9e6).toString(16);
+    }
+
+} 

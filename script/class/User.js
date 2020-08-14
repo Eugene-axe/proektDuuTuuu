@@ -8,11 +8,37 @@ class User {
         this.password = '';
         this.archiveTasks = [];
     }
-    setTask(komu , izdelie , title , description , dedline) {
-        let date = `${new Date().getMinutes()}м. ${new Date().getHours()}ч. ${new Date().getDate()} : ${new Date().getMonth()+1} : ${new Date().getFullYear()} `;
-        let task = new Task( this.name, komu , izdelie , false , title , description, date , dedline, 'когда закончишь');
-        console.log('Задача сформирована');
+    setSubTask(worker , izdelie , description , dedline , parent){
+        let date = `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`;
+        let subTask = new SubTask( worker , izdelie , description, dedline);
+        subTask.setDateStart();
+        subTask.setAutor(this);
+        subTask.setId();
+        subTask.idParent = parent;
+        console.group(`Сформирована подзадача к задаче ${subTask.idParent} работнику ${subTask.worker} по изделию ${subTask.izdelie}`);
+        console.log(subTask);
+        console.groupEnd();
+        return subTask;
+    }
+    setTask(izdelie, title) {
+        let task = new Task( izdelie , title);
+        console.group(`Пользователь ${this.name} сформировал задачу ${task.title}:`);
+        task.setId();
+        task.setAutor(this);
+        console.log(task);
+        console.groupEnd();
+        return task;
+    }
+    createTask(izdelie, title, worker, description, dedline){  
+        const task = this.setTask(izdelie, title); 
+        const subTask = this.setSubTask(worker,izdelie,description,dedline,task);
+        this.subTaskAddTask( task , subTask);
         this.saveInArchive(task);
+    }
+    subTaskAddTask(task , subTask){
+        if (task.id === subTask.idParent ) {
+            task.arraySubTask.push(subTask);
+        }
     }
     logIn(){
         // обращаемся в памаять 

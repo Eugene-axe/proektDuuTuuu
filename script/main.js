@@ -8,13 +8,12 @@ const app = {
     handler: {
         newtaskOk(){ // кнопка ОК в модалке Новой задачи
             console.log('ok');
-            //setTask(komu , izdelie , title , description , dedline)
-            const komu = document.getElementById('mod-worker').value;
+            const worker = document.getElementById('mod-worker').value;
             const izdelie = document.getElementById('mod-izdelie').value;
             const title = document.getElementById('mod-title').value;
             const description = document.getElementById('mod-description').value;
             const dedline = document.getElementById('mod-dedline').value;
-            app.user.setTask(komu , izdelie , title , description , dedline);
+            app.user.createTask(izdelie , title , worker , description , dedline);
             document.querySelector('.modal-newtask .btn-ok').removeEventListener('click' , app.handler.newtaskOk);
             document.querySelector('.modal-newtask .btn-cancel').removeEventListener('click', app.handler.newtaskCancel);
             app.handler.closeModal(app.modal.newtask);
@@ -59,29 +58,16 @@ const app = {
         document.querySelector('.stick-area').innerHTML = '';
         let arrayTask = user.getOutLocalStroage(); //вынимаем из памяти задачи конкретного Пользователя
         arrayTask.forEach( task => {
-            document.querySelector('.stick-area').append( this.createTaskStick(task));
+            task.arraySubTask.forEach( subTask => {
+                document.querySelector('.stick-area').append( this.createTaskStick(subTask));
+            });
         });
     },
-    createTaskStick(task){ //создаем конкретный 1 стикер с задачей
-        const stick = document.createElement('div');
-        stick.classList.add('task-container');
-        stick.insertAdjacentHTML('afterbegin' , `
-            <div class="stick">
-                <div class="stc-row row1">
-                    <div class="stick-date">
-                        <span class="stick-date-begin">${task.dateStart}</span>
-                        <span class="stick-dedline">${task.dateEnd}</span>
-                    </div>
-                    <div class="stick-izd">${task.izdelie}</div>
-                </div>
-                <div class="stc-row row2">${task.description}</div>
-                <div class="stc-row row3">
-                    <span class='stick-autor'>${task.autor}</span>
-                    <span class='stick-worker'>${task.worker}</span>
-                </div>
-            </div>`);
-        this.taskStick = stick;
-        return stick;
+    createTaskStick(subTask){ // тут немножкко костыльноЮ нечуспел
+        const taskContainer = document.createElement('div');
+        taskContainer.classList.add('task-container');
+        taskContainer.append(new Stick().create(subTask));
+        return taskContainer;
     },
     getCreateModalAddNewTask(){ //выводит модальное окно создания нового Стикера задачи
         const modal = document.createElement('div');
