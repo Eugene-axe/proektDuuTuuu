@@ -8,8 +8,9 @@ class User {
         this.password = '';
         this.archiveTasks = [];
     }
-    setSubTask(worker , izdelie , description , dedline , parent){
-        let date = `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`;
+    
+    setSubTask({worker , izdelie , description , dedline } , parent){
+        //let date = `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`;
         let subTask = new SubTask( worker , izdelie , description, dedline);
         subTask.setDateStart();
         subTask.setAutor(this);
@@ -20,7 +21,7 @@ class User {
         console.groupEnd();
         return subTask;
     }
-    setTask(izdelie, title) {
+    setTask({izdelie, title}) {
         let task = new Task( izdelie , title);
         console.group(`Пользователь ${this.name} сформировал задачу ${task.title}:`);
         task.setId();
@@ -29,16 +30,11 @@ class User {
         console.groupEnd();
         return task;
     }
-    createTask(izdelie, title, worker, description, dedline){  
-        const task = this.setTask(izdelie, title); 
-        const subTask = this.setSubTask(worker,izdelie,description,dedline,task);
-        this.subTaskAddTask( task , subTask);
-        this.saveInArchive(task);
-    }
     subTaskAddTask(task , subTask){
         if (task.id === subTask.idParent ) {
             task.arraySubTask.push(subTask);
         }
+        this.saveInArchiveNewTask(task);
     }
     logIn(){
         // обращаемся в памаять 
@@ -52,9 +48,19 @@ class User {
         this.login = login;
         this.password = password;
     }
-    saveInArchive(task){ //добавляет задачу к архиву
-        this.archiveTasks.push(task);
-        console.log('Задача добавлена в архив');
+    addSubTaskAfterPlus(subTask , idCaller){    
+        let task = this.archiveTasks.find( item => item.id === subTask.idParent);
+        if (task) {
+            //task.arraySubTask.push(subTask); //!!просто в конец это надо изменить
+            task.arraySubTask = instertSubTaskAfterSubTask(task.arraySubTask, subTask, idCaller);
+            this.setInLocalStorage();
+        } else {
+            console.error('Task в архиве archiveTask пользователя не найден')
+        }
+    }
+    saveInArchiveNewTask(data){ //добавляет задачу к архиву
+        this.archiveTasks.push(data);
+        console.log(' в Архив задач пользователя добавлены данные ');
         this.setInLocalStorage();
     }
     setInLocalStorage(){ //сохранит в память массив задач
@@ -71,3 +77,10 @@ class User {
     }
 
 }
+
+function instertSubTaskAfterSubTask(arraySubTask, newSubTask, idCaller){
+    let indexPreInsert = arraySubTask.findIndex(item => item.id == idCaller);
+    let arrayBeforeIndex = arraySubTask.slice(0, indexPreInsert+1);
+    return arrayBeforeIndex.concat(newSubTask, arraySubTask.slice(indexPreInsert+1) );
+}
+
