@@ -238,6 +238,7 @@ header {
     .subTask-container {
         display: flex;
         flex-direction: column;
+	position : relative;
     }
     .task-container:hover{
         opacity: 1;
