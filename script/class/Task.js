@@ -3,13 +3,14 @@
 class Task{
     constructor(izdelie, title){
         this.status = false;//'выполнено или в работе';
-        this.title = title;//'заголовок';
-        this.izdelie = izdelie;//'изделие';
-        this.arraySubTask = []; //массив подзадач
+        this.title = title;
+        this.izdelie = izdelie;
+        this.arraySubTask = []; 
     }
     changeStatus() {
         this.status = true;
-        this.dateEnd = `${new Date().getHours()}:${new Date().getMinutes()} ${new Date().getDate()}:${new Date().getMonth()+1}:${new Date().getFullYear()}`; 
+        const data = new Date();
+        this.dateEnd = `${data.getHours()}:${data.getMinutes()} ${data.getDate()}:${data.getMonth()+1}:${data.getFullYear()}`; 
     }
     setAutor(user){
         this.autor = user.name;

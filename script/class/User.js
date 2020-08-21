@@ -10,7 +10,6 @@ class User {
     }
     
     setSubTask({worker , izdelie , description , dedline } , parent){
-        //let date = `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`;
         let subTask = new SubTask( worker , izdelie , description, dedline);
         subTask.setDateStart();
         subTask.setAutor(this);
@@ -51,7 +50,6 @@ class User {
     addSubTaskAfterPlus(subTask , idCaller){    
         let task = this.archiveTasks.find( item => item.id === subTask.idParent);
         if (task) {
-            //task.arraySubTask.push(subTask); //!!просто в конец это надо изменить
             task.arraySubTask = instertSubTaskAfterSubTask(task.arraySubTask, subTask, idCaller);
             this.setInLocalStorage();
         } else {

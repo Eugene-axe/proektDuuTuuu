@@ -4,7 +4,7 @@ class Modal {
         this.btnCancel = null;
         this.newtask = null;
 
-        this.ok = () => {
+        this.ok = event => {
             console.group('Вы нажали Ок в модалке');
             console.log(event);
             let task = null;

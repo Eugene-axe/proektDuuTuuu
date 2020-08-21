@@ -41,9 +41,7 @@ const app = {
         });
     },
     createTaskStick(subTask){ 
-        const stickContainer = document.createElement('div');
-        stickContainer.append(new Stick().create(subTask));
-        return stickContainer;
+        return new Stick().create(subTask);
     },
 
     run(){ //запуск приложения
