@@ -6,12 +6,13 @@ const app = {
     main : document.querySelector('main'),
     stickArea : document.querySelector('.stick-area'),
     user: null,
-    taskStick: 'stick',
+    memory : new Memory(),
+    
 
-    currentUser(name='Господин'){ //обьявляем текущего Пользователя
-        return this.user = new User(name);
+    currentUser(nameUser){ //обьявляем текущего Пользователя
+        return this.user = this.memory.memoryStorage.find( user => user.name == nameUser );
     },
-    verification(){
+    verification(){ //переделать
         app.user.verification('inzhaner' , 'passwordrr')
     },
     headerGreeting(){ //измяем хэдер приветствия в соответсвии с текущим юзером
@@ -29,10 +30,11 @@ const app = {
         });
     }, 
     createTaskGrid(user){ //создаем сетку задач
-        document.querySelector('.stick-area').innerHTML = '';
-        let arrayTask = user.getOutLocalStroage(); //вынимаем из памяти задачи конкретного Пользователя
+        this.stickArea.innerHTML = '';
+        let arrayTask = app.memory.memoryStorage.find(userLS => userLS.name == user.name).archiveTasks;
         arrayTask.forEach( task => {
             const taskContainer = document.createElement('div');
+            taskContainer.setAttribute('data-taskId' , task.id);
             taskContainer.classList.add('task-container'); // пунктир
             task.arraySubTask.forEach( subTask => {
                 taskContainer.append( this.createTaskStick(subTask)); 
@@ -41,14 +43,16 @@ const app = {
         });
     },
     createTaskStick(subTask){ 
-        return new Stick().create(subTask);
+        return new Stick(subTask).create();
     },
 
     run(){ //запуск приложения
-        this.currentUser();
+        this.memory.saveUser(new User('Царь'));
+        this.currentUser('Царь');
         this.headerGreeting();
-        this.verification();
+        //this.verification();
         this.asideHandler();
+        this.createTaskGrid(app.user);
     },
 
 }

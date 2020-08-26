@@ -1,41 +1,40 @@
 class Stick { //принимает объект с подзадачей и на его основе выдает стикер
-    constructor(){
+    constructor(subTask){
+        this.subTask = subTask;
+        this.subTaskContainerObj = null;
         this.plus = () => {
-            new Modal().getModalAddTask();
+            new Modal(this.subTask.idParent , this.subTask.id).getModalAddTask();
         }
-        this.changeStatusSubTask = event => { // серый стрикер 
-            console.log('Событие смены статуса подзадачи');
-            const alert = new ModalWindowMenu('Хотите сказать что задача выполнена?');
-            const sTContainer = event.path.find( node => {
-                return node.classList.contains('subTask-container');
-            });
-            console.dir(sTContainer);
-            sTContainer.append(alert.create());
-            this.offEventSubtask(sTContainer);
+        this.changeStatusSubTask = event => {
+            const alertWin = new ModalWindowMenu('Хотите сказать что задача выполнена?', event.target );
+            const sTContainer = event.path.find( node => node.classList.contains('subTask-container'));
+            sTContainer.append(alertWin.create(this));
         }
         this.removeStick = event => {
-            console.log('Событие удаленния стика задачи');
-            event.target.parentNode.parentNode.remove();
+            const sTContainer = event.path.find( node => node.classList.contains('subTask-container'));
+            const alertWin = new ModalWindowMenu('Этот стикер больше не нужен?' , event.target);
+            sTContainer.append(alertWin.create());
         }
     }
-    create(subTask){
+    create(){
         const subTaskContainer = document.createElement('div');
         subTaskContainer.classList.add('subTask-container');
+        subTaskContainer.setAttribute('data-subTaskId', this.subTask.id)
         subTaskContainer.append(this.createWindowMenu());
-        subTaskContainer.append(this.createStickContainer(subTask));
+        subTaskContainer.append(this.createStickContainer(this.subTask));
+        this.subTaskContainerObj = subTaskContainer;
         return subTaskContainer;
     }
-    createStickContainer(subTask){
+    createStickContainer(subTask){ //стикер и все менюшки к нему прилегающие
         const stickContainer = document.createElement('div');
         stickContainer.classList.add('stick-container');
         stickContainer.append(this.createStickMain(subTask));
         stickContainer.append(this.createStickPlus(subTask._idParent , subTask.id));
         return stickContainer;
     }
-    createStickMain(subTask){
+    createStickMain(subTask){// сам стикер
         let stick = document.createElement('div');
         stick.classList.add('stick');
-        console.log(subTask);
         if (subTask.status == true) {
             stick.classList.add('status-over')
         }
@@ -54,7 +53,7 @@ class Stick { //принимает объект с подзадачей и на 
         </div>`);
         return stick;
     }
-    createStickPlus(idParent , id){
+    createStickPlus(idParent , id){ //добавление подзадачи из подзадачи
         let plus = document.createElement('div');
         plus.classList.add('task-plus');
         plus.setAttribute('data-from', 'subTaskPlusBtn');
@@ -64,10 +63,7 @@ class Stick { //принимает объект с подзадачей и на 
         plus.addEventListener('click' , this.plus);
         return plus;
     };
-    appendInNode(node){
-        node.append(this.createStickMain());
-    }
-    createWindowMenu(){
+    createWindowMenu(){ //вверхнее меню Галочка с Крестиком
         const upMenu = document.createElement('div');
         const btnRemove = document.createElement('div');
         const btnChangeStatus = document.createElement('div');

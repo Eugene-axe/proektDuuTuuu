@@ -1,12 +1,12 @@
 class Modal {
-    constructor(){
+    constructor(taskId, subTaskId){
         this.btnOk = null;
         this.btnCancel = null;
         this.newtask = null;
+        this.taskId = taskId;
+        this.subTaskId = subTaskId;
 
         this.ok = event => {
-            console.group('Вы нажали Ок в модалке');
-            console.log(event);
             let task = null;
             let subTask =null;
             let dataForTask = {
@@ -15,22 +15,21 @@ class Modal {
                 title : document.getElementById('mod-title').value,
                 description : document.getElementById('mod-description').value,
                 dedline : document.getElementById('mod-dedline').value,
-                fromName : event.target.dataset.from,
-                id : event.target.dataset.idparent,
-                idCaller : event.target.dataset.idcaller,
+                fromName : event.path.find( node => node.classList.contains('modal-newtask-container')).dataset.from,
+                id : event.path.find( node => node.classList.contains('modal-newtask-container')).dataset.taskid,
+                subTaskId : event.path.find( node => node.classList.contains('modal-newtask-container')).dataset.subtaskid,
             }
-            if (dataForTask.fromName == 'asideBtn') {
+            if (dataForTask.fromName == 'Задачу') {
                 task = app.user.setTask(dataForTask);
                 subTask = app.user.setSubTask( dataForTask , task);
                 app.user.subTaskAddTask(task , subTask);
             } 
-            if (dataForTask.fromName == 'subTaskPlusBtn') { 
+            if (dataForTask.fromName == '+') { 
                 subTask = app.user.setSubTask(dataForTask, dataForTask);
-                app.user.addSubTaskAfterPlus(subTask , dataForTask.idCaller);
+                app.memory.addSubTaskAfterPlus(subTask , dataForTask.subTaskId);
             }
             app.createTaskGrid(app.user);
             this.close(this.newtask);
-            console.groupEnd();
         };
         this.cancel = () => {
             console.log('cancel');
@@ -46,11 +45,12 @@ class Modal {
     }
 
     getModalAddTask(){
-        const elementDoEvent = event.target.dataset.from;
-        const parentID = event.target.dataset.idparent;
-        const idCaller = event.target.dataset.id;
+        const elementDoEvent = event.target.textContent;
         const modal = document.createElement('div');
         modal.classList.add('modal-newtask-container');
+        modal.setAttribute('data-from', event.target.textContent);
+        modal.setAttribute('data-taskId', this.taskId );
+        modal.setAttribute('data-subTaskId', this.subTaskId );
         modal.insertAdjacentHTML('afterbegin' , `
         <div class='modal-newtask'>
             <form action="">
@@ -64,7 +64,7 @@ class Modal {
                 </fieldset>
                 <fieldset class='field-modalbtn'>
                     <div>
-                        <div class="btn-ok divbtn" data-from=${elementDoEvent} data-idParent=${parentID} data-idCaller=${idCaller}>Запомним</div>
+                        <div class="btn-ok divbtn" data-from=${elementDoEvent} data-idParent=${this.taskId} data-idCaller=${this.subTaskId}>Запомним</div>
                         <div class="btn-cancel divbtn">Забьем</div>
                     </div>
                 </fieldset>

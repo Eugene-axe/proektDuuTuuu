@@ -1,53 +1,78 @@
 class ModalWindowMenu {
-    constructor(text){
+    constructor(text , node){
         this.text = text;
+        this.nodeCallerModal = node; 
         this.textBlock = text => {
             const textBlock = document.createElement('div');
             textBlock.classList.add('mw-textBlock');
             textBlock.textContent = text;
             return textBlock;
         };
-        this.btnOk = () => {
-            const ok = document.createElement('mw-btnOk');
-            ok.classList.add('mw-btnOk');
-            ok.textContent = 'Ну да';
-            ok.addEventListener('click' , this.okHandler);
-            return ok; 
-        };
-        this.btnCancel = () => {
-            const cancel = document.createElement('mw-btnCancel');
-            cancel.classList.add('mw-btnCancel');
-            cancel.textContent = 'Д, неее';
-            cancel.addEventListener('click' , this.cancelHandler);
-            return cancel; 
-        };
         this.okHandler = event => {
-            console.group('mw-ok-event');
-            console.log(event);
-            const sTContainer = event.path.find( node => node.classList.contains('subTask-container'));
+            let stickObj = event.target.parentos;
+            const sTContainer = stickObj.subTaskContainerObj;
             sTContainer.querySelector('.stick').classList.add('status-over');
             let data = sTContainer.querySelector('.task-plus').dataset;
             let subTask = app.user.archiveTasks.find( task => task.id == data.idparent).arraySubTask.find( subTask => subTask.id == data.id );
             subTask.changeStatus();
-            app.user.setInLocalStorage();
-            console.groupEnd();
+            stickObj.offEventSubtask(sTContainer);
+            app.memory.refreshUser(app.user);
             this.clearHandler(event.target);
-            this.close();
+            this.close(event.target.parentNode);
         };
         this.cancelHandler = event => {
-            console.group('mw-cancel-event');
-            console.log(event);
+            this.clearHandler(event.target);
+            this.close(event.target.parentNode);
+        };
+        this.removeStickHandler = () => {
+            console.group('removeStick');
+            let taskId = event.path.find(node => node.classList.contains('task-container')).dataset.taskid;
+            let subTaskId = event.path.find(node => node.classList.contains('subTask-container')).dataset.subtaskid;
+            console.log(taskId , subTaskId);
+            let userOfMemory = app.memory.memoryStorage.find( userOfMem => userOfMem.name == app.user.name);
+            console.log(userOfMemory);
+            userOfMemory.archiveTasks.find(task => task.id == taskId).deleteSubTask(subTaskId);
+            app.memory.refreshUser(app.user);
+            event.path.find(node => node.classList.contains('subTask-container')).remove();
             console.groupEnd();
             this.clearHandler(event.target);
-            this.close();
-        };
+            this.close(event.target.parentNode);
+        }
         
     }
-    create(){
+    btnOk (stickObject) {
+        const ok = document.createElement('mw-btnOk');
+        ok.parentos = stickObject;
+        ok.classList.add('mw-btnOk');
+        ok.textContent = 'Ну да';
+        console.log(this.nodeCallerModal);
+        if (this.nodeCallerModal.classList.contains('btnStatus')) {
+            ok.addEventListener('click' , this.okHandler);
+        } 
+        if (this.nodeCallerModal.classList.contains('btnRemove')) {
+            ok.addEventListener('click' , this.removeStickHandler);
+        }
+        return ok; 
+    }
+    btnCancel () {
+        const cancel = document.createElement('mw-btnCancel');
+        cancel.classList.add('mw-btnCancel');
+        cancel.textContent = 'Д, неее';
+        cancel.addEventListener('click' , this.cancelHandler);
+        return cancel; 
+    }
+    create(stickObject){
         const winMenu = document.createElement('div');
         winMenu.classList.add('modal-window-menu');
+        if (this.nodeCallerModal.classList.contains('btnStatus')) {
+            winMenu.classList.add('mwm-l');
+        } 
+        if (this.nodeCallerModal.classList.contains('btnRemove')) {
+            winMenu.classList.add('mwm-r');
+        }
+        setTimeout( () => winMenu.classList.add('non-opacity'), 100);
         winMenu.append(this.textBlock(this.text));
-        winMenu.append(this.btnOk());
+        winMenu.append(this.btnOk(stickObject));
         winMenu.append(this.btnCancel());
         return winMenu;
     }
@@ -55,7 +80,10 @@ class ModalWindowMenu {
         eventTarget.parentNode.querySelector('mw-btnOk').removeEventListener('click', this.okHandler);
         eventTarget.parentNode.querySelector('mw-btnCancel').removeEventListener('click', this.cancelHandler);
     }
-    close(){
-        console.log('окно закрылось');
+    close(node){
+        node.classList.remove('non-opacity');
+        setTimeout( () => {
+            node.remove();
+        } , 300 );
     }
 }

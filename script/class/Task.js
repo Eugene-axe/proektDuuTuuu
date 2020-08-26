@@ -18,5 +18,7 @@ class Task{
     setId(){
         this.id = Math.floor(Math.random()*9e6).toString(16);
     }
-
+    deleteSubTask(subTaskId){
+        this.arraySubTask = this.arraySubTask.filter( item => item.id !== subTaskId);
+    }
 } 
